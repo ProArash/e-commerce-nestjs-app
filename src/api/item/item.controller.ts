@@ -4,12 +4,12 @@ import {
   Get,
   Param,
   Post,
-  Req,
+  Res,
   ValidationPipe,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
-import { Request } from 'express';
 import { ItemCreateDto } from './dto/create.dto';
+import { Response } from 'express';
 
 @Controller('item')
 export class ItemController {
@@ -21,21 +21,20 @@ export class ItemController {
   }
 
   @Get(':id')
-  async getItemById(@Param() params: any) {
-    const { id } = params;
-    return {
-      message: id,
-    };
+  async getItemById(@Param() params: any, @Res() res: Response) {
+    const item = await this.itemService.getById(params.id);
+    if (!item) {
+      return res.status(404).json({
+        message: `Item ${params.id} not found.`,
+      });
+    }
+    return res.status(200).json({
+      item
+    });
   }
 
   @Post()
-  async newItem(
-    @Body(new ValidationPipe()) itemDto: ItemCreateDto,
-    @Req() req: Request,
-  ) {
-    itemDto = req.body;
-    console.log(itemDto);
-
+  async newItem(@Body(new ValidationPipe()) itemDto: ItemCreateDto) {
     return await this.itemService.newItem(itemDto);
   }
 }

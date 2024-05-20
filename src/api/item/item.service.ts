@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from './item.model';
 import { Repository } from 'typeorm';
 import { ItemCreateDto } from './dto/create.dto';
+import { User } from '../user/user.model';
+import { Category } from '../category/category.model';
 
 @Injectable()
 export class ItemService {
@@ -12,7 +14,23 @@ export class ItemService {
   ) {}
 
   getItems(): Promise<Item[]> {
-    return this.itemRepository.find();
+    return this.itemRepository.find({
+      relations: {
+        user: true,
+        category: true,
+      },
+    });
+  }
+  getById(id: any): Promise<Item> {
+    return this.itemRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        user: true,
+        category: true,
+      },
+    });
   }
 
   async newItem(itemDto: ItemCreateDto): Promise<Item | object> {
@@ -26,6 +44,22 @@ export class ItemService {
         message: `Item '${itemDto.title}' is duplicate!`,
       };
     }
-    return this.itemRepository.create(itemDto).save();
+    const user = await User.findOne({
+      where: {
+        id: itemDto.userId,
+      },
+    });
+    const category = await Category.findOne({
+      where: {
+        id: itemDto.categoryId,
+      },
+    });
+    return this.itemRepository
+      .create({
+        user,
+        category,
+        ...itemDto,
+      })
+      .save();
   }
 }

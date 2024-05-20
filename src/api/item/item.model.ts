@@ -1,4 +1,4 @@
-import {  Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../user/user.model';
 import { FixedEntity } from '../../utils/fixed-entity';
 import { Category } from '../category/category.model';
@@ -9,6 +9,14 @@ export class Item extends FixedEntity {
     unique: true,
   })
   title: string;
+
+  @Column()
+  caption: string;
+
+  @Column({
+    nullable: true,
+  })
+  img_url: string;
 
   @Column()
   price: number;

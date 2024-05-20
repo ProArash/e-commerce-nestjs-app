@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryCreateDto } from './dto/create.dto';
-import { Request } from 'express';
 import { CategoryUpdateDto } from './dto/update.dto';
 import { CategoryDeleteDto } from './dto/delete.dto';
 
@@ -23,21 +22,18 @@ export default class CategoryController {
     return this.categoryService.getCategories();
   }
 
+  @Get(':id')
+  async getById(@Param() params: any) {
+    return await this.categoryService.getById(params.id);
+  }
+
   @Post()
-  addNew(
-    @Body(new ValidationPipe()) categoryDto: CategoryCreateDto,
-    req: Request,
-  ) {
-    categoryDto = req.body;
+  addNew(@Body(new ValidationPipe()) categoryDto: CategoryCreateDto) {
     return this.categoryService.newCategory(categoryDto);
   }
 
   @Put()
-  updateById(
-    @Body(new ValidationPipe()) catDto: CategoryUpdateDto,
-    req: Request,
-  ) {
-    catDto = req.body;
+  updateById(@Body(new ValidationPipe()) catDto: CategoryUpdateDto) {
     return this.categoryService.updateById(catDto);
   }
 

@@ -16,6 +16,16 @@ export class CategoryService {
   getCategories(): Promise<Category[]> {
     return this.categoryRepository.find();
   }
+  getById(id: any): Promise<Category> {
+    return this.categoryRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        items: true,
+      },
+    });
+  }
   async newCategory(
     categoryDto: CategoryCreateDto,
   ): Promise<Category | object> {
@@ -32,9 +42,7 @@ export class CategoryService {
     return this.categoryRepository.create(categoryDto).save();
   }
 
-  async updateById(
-    catDto: CategoryUpdateDto,
-  ): Promise<Category | object> {
+  async updateById(catDto: CategoryUpdateDto): Promise<Category | object> {
     const category = await this.categoryRepository.findOne({
       where: {
         id: catDto.id,

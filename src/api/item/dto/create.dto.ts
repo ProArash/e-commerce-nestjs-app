@@ -8,4 +8,16 @@ export class ItemCreateDto {
   @IsNumber()
   @IsNotEmpty()
   price: number;
+
+  @IsString()
+  @IsNotEmpty()
+  caption: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  categoryId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
 }
