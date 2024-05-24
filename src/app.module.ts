@@ -15,6 +15,7 @@ import { AuthModule } from './api/auth/auth.module';
 import { UserRole } from './utils/role-enum';
 import { roleGuard } from './middlewares/role.middleware';
 import { ItemController } from './api/item/item.controller';
+import { CartModule } from './api/cart/cart.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ItemController } from './api/item/item.controller';
     ItemModule,
     CategoryModule,
     AuthModule,
+    CartModule,
   ],
   exports: [TypeOrmModule],
 })
